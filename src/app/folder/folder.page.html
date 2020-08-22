@@ -23,10 +23,10 @@
         accept="image/png, image/jpeg">
     </ion-button> -->
 
-
     <input type="file" name="file" (change)="fileSelected($event)">
-
-    {{content}}
+    
+    <br>
+    {{users | json }}
 
   </div>
 </ion-content>

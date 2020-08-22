@@ -18,7 +18,7 @@ import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-nati
     IonicModule,
     FolderPageRoutingModule
   ],
-  declarations: [FolderPage]
+  declarations: [FolderPage],
 })
 export class FolderPageModule {
 
