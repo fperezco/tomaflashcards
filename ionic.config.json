@@ -1,5 +1,8 @@
 {
   "name": "tomaflashcards",
-  "integrations": {},
+  "integrations": {
+    "cordova": {},
+    "capacitor": {}
+  },
   "type": "angular"
 }
