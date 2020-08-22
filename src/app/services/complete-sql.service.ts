@@ -27,10 +27,23 @@ export class CompleteSqlService {
   }
 
   executeStatement(statement){
-    console.log("execute statement" + statement);
+    console.log("!!!!!!execute statement!!!!!" + statement);
     console.log("dbinstance = ");
     console.log(this.dbInstance);
-      this.dbInstance.executeSql(statement,[]);
+   /// this.dbInstance.executeSql(statement,[]);
+   this.dbInstance.executeSql(statement, [])
+   .then(() => {
+     console.log('statement executes successfull');
+   })
+   .catch(e => console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!ERROR executing statement:"+ e));
+
+
+/*       this.dbInstance.executeSql(statement, function(tx, result) {
+        alert('statement ok');
+    },
+    function(error) {
+        alert('Error occurred:'+ error);
+    }); */
   }
 
 
@@ -61,16 +74,9 @@ export class CompleteSqlService {
           reject(e);
         }
         );
-      //this.dbInstance = new sqlite3.Database(dbPath, err => err ? resolve() : reject(err));
-      });
+   });
   }
 
-
-/*   OpenDB(databaseName){
-    return new Promise(function (resolve, reject) {
-    })
-  } */
-  
   openDB(databaseName) {
 
     if (!this.platform.is("cordova")) {
@@ -83,61 +89,6 @@ export class CompleteSqlService {
         this.dbInstance = response;
       });
     }
+}
 
-/*      return new Promise(function (resolve, reject) {
-
-      if (!this.platform.is("cordova")) {
-        console.log("es cordova");
-        let db = window.openDatabase(databaseName, "1.0", "DEV", 5 * 1024 * 1024);
-        this.dbInstance = browserDBInstance(db);
-        resolve();
-      } else {
-        console.log("es android!!");
-        this.sqlite
-          .create({
-            name: databaseName,
-            location: "default",
-          })
-          .then((db: SQLiteObject) => {
-            this.dbInstance = SQLiteObject;
-            resolve();
-          })
-          .catch((e) => {
-            console.log("ERRORK" + e);
-            reject(e);
-          }
-          );
-      }
-
-      //this.dbInstance = new sqlite3.Database(dbPath, err => err ? resolve() : reject(err));
-    });  */
-  }
-
-
-
-/*   init() {
-    if (!this.platform.is("cordova")) {
-      console.log("es cordova");
-      let db = window.openDatabase(SQL_DB_NAME, "1.0", "DEV", 5 * 1024 * 1024);
-      this.dbInstance = browserDBInstance(db);
-      return this.dbInstance;
-    } else {
-      console.log("es android!!");
-      /*       this.dbInstance = await this.sqlite.create({
-        name: SQL_DB_NAME,
-        location: 'default'
-      }); */
-
-/*       this.sqlite
-        .create({
-          name: SQL_DB_NAME,
-          location: "default",
-        })
-        .then((db: SQLiteObject) => {
-          this.dbInstance = SQLiteObject;
-          return this.dbInstance;
-        })
-        .catch((e) => console.log("ERRORK" + e));
-    } */
-//  } 
 }
