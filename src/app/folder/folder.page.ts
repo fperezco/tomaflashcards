@@ -3,6 +3,13 @@ import { ActivatedRoute } from '@angular/router';
 import { CompleteSqlService } from '../services/complete-sql.service';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { CsvProcessorService } from '../services/csv-processor.service';
+import { AlertController } from '@ionic/angular';
+
+//run on emulador
+// ionic cordova run android 
+//run en mi movil
+//ionic cordova run android --device
+
 
 @Component({
   selector: 'app-folder',
@@ -18,8 +25,8 @@ export class FolderPage implements OnInit {
 
   constructor(private activatedRoute: ActivatedRoute,
     private sql: CompleteSqlService,
-    private sqlite: SQLite,
-    private csvProcessor: CsvProcessorService
+    private csvProcessor: CsvProcessorService,
+    public alertController: AlertController
     ) { }
 
   ngOnInit() {
@@ -35,15 +42,12 @@ export class FolderPage implements OnInit {
       })
       .then(() => {
         console.log("tabla creada, insertamos");
-        //this.sql.executeStatement(`INSERT INTO userstest3(id, user) VALUES (3, 'eeeefjuasdfdsan')`);
       })
       .then(() => {
         console.log("insercion completada");
       })
       .catch(err => console.error(err));
     }
-
-
 
     /**
      * Method invoke when csv file is selected
@@ -62,9 +66,6 @@ export class FolderPage implements OnInit {
       console.log(lines);
       
       this.createFlashCardTable(lines);
-/*       this.createDatabase();
-      this.sqliteManagementService.create( {title:"tarea1", completed:"true"});
-      this.sqliteManagementService.create( {title:"tarea2", completed:"false"}); */
     };
   }
 
@@ -75,18 +76,14 @@ export class FolderPage implements OnInit {
    */
   createFlashCardTable(csvLines){
     var index = 1;
-/*     csvLines.forEach(line => {
-      console.log(index + ":" + line);
-      this.processLine(index, line);
-      index++;
-    }); */
-
     var arrayLength = csvLines.length;
     console.log("longitud:"+ arrayLength);
     for (var i = 0; i < arrayLength; i++) {
       console.log(i + ":" + csvLines[i]);
       this.processLine(i, csvLines[i]);
     }
+
+    this.presentAlert("Data Import","","Data importation successfull");
 
   }
 
@@ -115,7 +112,7 @@ export class FolderPage implements OnInit {
   createTable(title){
     // columns are a fixed value
     console.log("creating table....");
-    const statement = 'CREATE TABLE IF NOT EXISTS ' + title + '(id INTEGER PRIMARY KEY AUTOINCREMENT, a_verb TEXT,a_mean TEXT, a_example TEXT, b_verb TEXT, b_mean TEXT, b_example TEXT)';
+    const statement = 'CREATE TABLE IF NOT EXISTS ' + title + '(id INTEGER PRIMARY KEY AUTOINCREMENT, a_verb TEXT,a_mean TEXT, a_example TEXT, b_verb TEXT, b_mean TEXT, b_example TEXT,result INTEGER)';
     console.log(statement);
     this.sql.executeStatement(statement);
   }
@@ -129,11 +126,22 @@ export class FolderPage implements OnInit {
 
   insertToTable(tupla:any){
     console.log("insert to table....");
-    const statement = "INSERT INTO "+tupla['tableName']+"(a_verb,a_mean, a_example, b_verb, b_mean, b_example) VALUES ('"+tupla['a_verb'] +"','"+tupla['a_mean'] +"','"+tupla['a_example'] +"','"+tupla['b_verb'] +"','"+tupla['b_mean'] +"','"+tupla['b_example'] +"')";
+    const statement = "INSERT INTO "+tupla['tableName']+"(a_verb,a_mean, a_example, b_verb, b_mean, b_example, result) VALUES ('"+tupla['a_verb'] +"','"+tupla['a_mean'] +"','"+tupla['a_example'] +"','"+tupla['b_verb'] +"','"+tupla['b_mean'] +"','"+tupla['b_example'] + "','"+tupla['result'] +"')";
     console.log(statement);
     this.sql.executeStatement(statement);
   }
 
-  
+
+  async presentAlert(header,subHeader,message) {
+    const alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: header,
+      subHeader: subHeader,
+      message: message,
+      buttons: ['OK']
+    });
+
+    await alert.present();
+  }
 
 }
